@@ -15,7 +15,7 @@ set(CXX_FLAGS
     -Wold-style-cast
     -Woverloaded-virtual
     -Wpointer-arith
-    -Wshadow
+    #-Wshadow
     -Wwrite-strings
     -std=c++11 
     -rdynamic)
