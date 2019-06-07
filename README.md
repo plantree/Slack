@@ -15,7 +15,7 @@
 ### Environment
 
 - OS: Ubuntu 18.04 (64 bit)
-- Compiler: g++ 7.3.0
+- Compiler: gcc 7.3.0 (Ubuntu 7.3.0-27ubuntu1~18.04) 
 - Build: CMake 3.10.2
 
 ### Design
@@ -25,7 +25,8 @@
 
 ### Todo
 
-- [ ] Timestamp(.h/.cc)
+- [x] Timestamp(.h/.cc)
+- [x] Atomic
 - [ ] 
 
 ### Blogs

@@ -1,0 +1,18 @@
+@startuml
+class AtomicIntegerT<T>
+{
+    - volatile atomic<T> value_
+    + AtomicIntegerT()
+    + T get()
+    + T getAndAdd(T)
+    + T addAndGet(T)
+    + T incrementAndGet()
+    + T decrementAndGet()
+    + void add(T)
+    + void increment()
+    + void decrement()
+    + T getAndSet(T)
+}
+
+
+@enduml

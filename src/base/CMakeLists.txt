@@ -1,6 +1,7 @@
 set(BASE_SRCS 
     Timestamp.cc
-    #Exception.cc
+    Exception.cc
+    CurrentThread.cc
     #Thread.cc
     #CountDownLatch.cc
     #Condition.cc
