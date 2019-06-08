@@ -7,6 +7,9 @@ target_link_libraries(atomic_unittest slack_base)
 add_executable(exception_unittest Exception_unittest.cc)
 target_link_libraries(exception_unittest slack_base)
 
+add_executable(mutex_unittest Mutex_unittest.cc)
+target_link_libraries(mutex_unittest slack_base)
+
 #add_executable(thread_unittest Thread_unittest.cc)
 #target_link_libraries(thread_unittest muduo_base)
 
