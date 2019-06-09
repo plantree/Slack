@@ -2,7 +2,7 @@
  * @Author: py.wang 
  * @Date: 2019-06-06 18:03:51 
  * @Last Modified by: py.wang
- * @Last Modified time: 2019-06-06 18:28:50
+ * @Last Modified time: 2019-06-09 16:58:47
  */
 #include "src/base/CurrentThread.h"
 
@@ -16,7 +16,7 @@ namespace slack
 namespace CurrentThread
 {
 
-__thread int t_cacheTid = 0;
+__thread int t_cachedTid = 0;
 __thread char t_tidString[32];
 __thread int t_tidStringLength = 6;
 __thread const char *t_threadName = "unknown";

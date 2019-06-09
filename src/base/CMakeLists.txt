@@ -2,9 +2,9 @@ set(BASE_SRCS
     Timestamp.cc
     Exception.cc
     CurrentThread.cc
-    #Thread.cc
-    #CountDownLatch.cc
-    #Condition.cc
+    Thread.cc
+    CountDownLatch.cc
+    Condition.cc
     #ThreadPool.cc
     #LogStream.cc
     #Logging.cc
