@@ -38,9 +38,9 @@ public:
     }
 
     // 判断是否自己持有锁
-    bool isLockedByThisThread()
+    bool isLockedByThisThread() const
     {
-        return holder_ == CurrentThread::tid();
+        return getHolder() == CurrentThread::tid();
     }
     
     // 必须锁住
@@ -52,15 +52,17 @@ public:
     // internal usage
     void lock()
     {
-        pthread_mutex_lock(&mutex_);
-        holder_ = CurrentThread::tid();
+        int ret = pthread_mutex_lock(&mutex_);
+        assert(ret == 0); (void)ret;
+        assignHolder();
     }
 
     void unlock()
     {
         // 逆序
-        holder_ = 0;
-        pthread_mutex_unlock(&mutex_);
+        unassignHolder();
+        int ret = pthread_mutex_unlock(&mutex_);
+        assert(ret == 0); (void)ret;
     }
 
     // 获取内部锁
@@ -68,14 +70,43 @@ public:
     {
         return &mutex_;
     }
+    pid_t getHolder() const 
+    {
+        return holder_;
+    }
 private:
-    pthread_mutex_t mutex_;     // 互斥锁
-    pid_t holder_;              // 持有锁的线程ID
+    friend class Condition;
+
+    class UnassignGuard : noncopyable
+    {
+    public:
+        explicit UnassignGuard(MutexLock &owner)
+            : owner_(owner)
+        {
+            // 释放
+            owner_.unassignHolder();
+        }
+        ~UnassignGuard()
+        {
+            // 重新获取
+            owner_.assignHolder();
+        }
+    private:
+        MutexLock &owner_;
+    };
+
+    void assignHolder()
+    {
+        holder_ = CurrentThread::tid();
+    }
 
     void unassignHolder()
     {
         holder_ = 0;
     }
+
+    pthread_mutex_t mutex_;     // 互斥锁
+    pid_t holder_;         // 持有锁的线程ID
 };
 
 // 避免直接的对锁进行操作，lock/unlock必须对应，遇到异常可能出错

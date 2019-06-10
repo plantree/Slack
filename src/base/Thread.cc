@@ -132,12 +132,9 @@ namespace detail
 void CurrentThread::cachedTid()
 {
     // lazy cache
-    if (t_cachedTid == 0)
-    {
-        t_cachedTid = detail::gettid();
-        t_tidStringLength = snprintf(t_tidString, sizeof t_tidString, "%5d ", t_cachedTid);
-        assert(t_tidStringLength == 6);
-    }
+    t_cachedTid = detail::gettid();
+    t_tidStringLength = snprintf(t_tidString, sizeof t_tidString, "%5d ", t_cachedTid);
+    assert(t_tidStringLength == 6);
 }
 
 bool CurrentThread::isMainThread()

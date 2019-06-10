@@ -5,7 +5,7 @@ set(BASE_SRCS
     Thread.cc
     CountDownLatch.cc
     Condition.cc
-    #ThreadPool.cc
+    ThreadPool.cc
     #LogStream.cc
     #Logging.cc
     #FileUtil.cc
