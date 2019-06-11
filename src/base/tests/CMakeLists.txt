@@ -22,6 +22,15 @@ target_link_libraries(threadlocal_unittest slack_base)
 add_executable(threadpool_unittest ThreadPool_unittest.cc)
 target_link_libraries(threadpool_unittest slack_base)
 
+add_executable(singleton_unittest Singleton_unittest.cc)
+target_link_libraries(singleton_unittest slack_base)
+
+add_executable(singletonthreadlocal_unittest SingletonThreadLocal_unittest.cc)
+target_link_libraries(singletonthreadlocal_unittest slack_base)
+
+add_executable(threadlocalsingleton_unittest ThreadLocalSingleton_unittest.cc)
+target_link_libraries(threadlocalsingleton_unittest slack_base)
+
 #add_executable(blockingqueue_unittest BlockingQueue_unittest.cc)
 #target_link_libraries(blockingqueue_unittest muduo_base)
 
@@ -32,15 +41,9 @@ target_link_libraries(threadpool_unittest slack_base)
 #target_link_libraries(boundedblockingqueue_unittest muduo_base)
 
 
-#add_executable(singleton_unittest Singleton_unittest.cc)
-#target_link_libraries(singleton_unittest muduo_base)
 
 
-#add_executable(singletonthreadlocal_unittest SingletonThreadLocal_unittest.cc)
-#target_link_libraries(singletonthreadlocal_unittest muduo_base)
 
-#add_executable(threadlocalsingleton_unittest ThreadLocalSingleton_unittest.cc)
-#target_link_libraries(threadlocalsingleton_unittest muduo_base)
 
 #if(BOOSTTEST_LIBRARY)
 #add_executable(logstream_unittest LogStream_unittest.cc)
