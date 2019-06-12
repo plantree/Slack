@@ -6,10 +6,10 @@ set(BASE_SRCS
     CountDownLatch.cc
     Condition.cc
     ThreadPool.cc
+    FileUtil.cc
+    ProcessInfo.cc
     #LogStream.cc
     #Logging.cc
-    #FileUtil.cc
-    #ProcessInfo.cc
     #LogFile.cc
     #AsyncLogging.cc
     )

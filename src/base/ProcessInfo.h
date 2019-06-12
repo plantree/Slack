@@ -5,15 +5,18 @@
  * @Last Modified time: 2019-05-15 09:07:29
  */
 
-#ifndef MUDUO_BASE_PROCESSINFO_H
-#define MUDUO_BASE_PROCESSINFO_H
+#ifndef BASE_PROCESSINFO_H
+#define BASE_PROCESSINFO_H
 
-#include <muduo/base/Types.h>
-#include <muduo/base/Timestamp.h>
+#include "src/base/Types.h"
+#include "src/base/Timestamp.h"
+#include "src/base/StringPiece.h"
+
 #include <vector>
+
 #include <pthread.h>
 
-namespace muduo
+namespace slack
 {
 
 namespace ProcessInfo
@@ -21,23 +24,52 @@ namespace ProcessInfo
     pid_t pid();
     string pidString();
     uid_t uid();
-    string username();
+    string userName();
     uid_t euid();
     Timestamp startTime();
+    int clockTicksPerSecond();
+    int pageSize();
+    bool isDebugBuild();    // constexpr
     
-    string hostname();
+    string hostName();
+    string procName();
+    StringPiece procName(const string &stat);
 
     // read /proc/self/status
     string procStatus();
 
+    // read /proc/self/stat
+    string procStat();
+
+    // read /proc/self/task/tid/stat
+    string threadStat();
+
+    // readlink /proc/self/exe
+    string exePath();
+
     int openedFiles();
     int maxOpenFiles();
+
+    struct CpuTime
+    {
+        double userSeconds;
+        double systemSeconds;
+
+        CpuTime() : userSeconds(0.0), systemSeconds(0.0) { }
+
+        double total() const 
+        {
+            return userSeconds + systemSeconds;
+        }
+    };
+
+    CpuTime cpuTime();
 
     int numThreads();
     std::vector<pid_t> threads();
     
 }   // namespace ProcessInfo
 
-}   // namespace muduo
+}   // namespace slack
 
-#endif // MUDUO_BASE_PROCESSINFO_H
+#endif // BASE_PROCESSINFO_H
