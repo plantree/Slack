@@ -42,7 +42,7 @@ public:
     {
         running_ = true;
         thread_.start();
-        // 在线程运行之后返回
+        // 在日志线程运行之后继续执行
         latch_.wait();
     }
 

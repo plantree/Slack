@@ -215,7 +215,7 @@ template <typename T>
 Fmt::Fmt(const char *fmt, T val)
 {
     // 算术类型检查
-    static_assert(std::is_arithmetic<T>::value == true);
+    static_assert(std::is_arithmetic<T>::value == true, "arithmetic");
 
     length_ = snprintf(buf_, sizeof buf_, fmt, val);
     assert(static_cast<size_t>(length_) < sizeof buf_);
