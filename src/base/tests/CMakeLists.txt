@@ -46,16 +46,3 @@ target_link_libraries(fileutil_unittest slack_base)
 add_executable(processinfo_unittest ProcessInfo_unittest.cc)
 target_link_libraries(processinfo_unittest slack_base)
 
-#add_executable(logstream_bench LogStream_bench.cc)
-#target_link_libraries(logstream_bench muduo_base)
-
-#add_executable(logging_unittest Logging_unittest.cc)
-#target_link_libraries(logging_unittest muduo_base)
-
-
-
-#add_executable(logfile_unittest LogFile_unittest.cc)
-#target_link_libraries(logfile_unittest muduo_base)
-
-#add_executable(asynclogging_unittest AsyncLogging_unittest.cc)
-#target_link_libraries(asynclogging_unittest muduo_base)

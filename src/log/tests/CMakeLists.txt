@@ -1,0 +1,14 @@
+add_executable(logstream_bench LogStream_bench.cc)
+target_link_libraries(logstream_bench slack_log slack_base)
+
+add_executable(logstream_unittest LogStream_unittest.cc)
+target_link_libraries(logstream_unittest slack_log slack_base)
+
+add_executable(logging_unittest Logging_unittest.cc)
+target_link_libraries(logging_unittest slack_log slack_base)
+
+add_executable(logfile_unittest LogFile_unittest.cc)
+target_link_libraries(logfile_unittest slack_log slack_base)
+
+add_executable(asynclogging_unittest AsyncLogging_unittest.cc)
+target_link_libraries(asynclogging_unittest slack_log slack_base)

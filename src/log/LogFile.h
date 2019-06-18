@@ -5,53 +5,54 @@
  * @Last Modified time: 2019-05-16 07:57:02
  */
 
-#ifndef MUDUO_BASE_LOGFILE_H
-#define MUDUO_BASE_LOGFILE_H
+#ifndef LOG_LOGFILE_H
+#define LOG_LOGFILE_H
 
-#include <muduo/base/Mutex.h>
-#include <muduo/base/Types.h>
-#include <muduo/base/noncopyable.h>
+#include "src/base/Mutex.h"
+#include "src/base/Types.h"
+#include "src/base/noncopyable.h"
 
 #include <memory>
 
-namespace muduo
+namespace slack
 {
 
 class LogFile : noncopyable
 {
 public:
     LogFile(const string &basename, 
-            size_t rollsize,
+            off_t rollsize,
             bool threadSafe = true,
-            int flushInterval = 3);
+            int flushInterval = 3,
+            int checkEveryN = 1024);
     ~LogFile();
 
     void append(const char *logline, int len);
     void flush();
+    bool rollFile();
 
 private:
     void append_unlocked(const char *logline, int len);
 
     static string getLogFileName(const string &basename, time_t *now);
-    void rollFile();
 
     const string basename_;     // 日志文件basename
     const size_t rollSize_;     // 日志文件rollSize_
     const int flushInterval_;   // 写入间隔时间
+    const int checkEveryN_;
 
     int count_;
 
     std::unique_ptr<MutexLock> mutex_;  // 智能指针管理mutex_
-    time_t startOfPeriod_;      // 开始记录日志时间
-    time_t lastRoll_;           // 上一次滚动时间
-    time_t lastFlush_;          // 最后一次刷新缓冲区
-    class File;                 // 内部文件类
+    time_t startOfPeriod_;              // 开始记录日志时间
+    time_t lastRoll_;                   // 上一次滚动时间
+    time_t lastFlush_;                  // 最后一次刷新缓冲区
+    class File;
     std::unique_ptr<File> file_;
 
-    const static int kCheckTimeRoll_ = 1024;
-    const static int kRollPerSeconds_ = 60 * 60 * 1024;
+    const static int kRollPerSeconds_ = 60 * 60 * 24;
 };
 
-}   // namespace muduo
+}   // namespace slack
 
-#endif  // MUDUO_BASE_LOGFILE_H
+#endif  // LOG_LOGFILE_H

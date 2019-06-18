@@ -5,17 +5,17 @@
  * @Last Modified time: 2019-05-16 09:33:56
  */
 
-#include <muduo/base/LogFile.h>
-#include <muduo/base/Logging.h>
-#include <muduo/base/ProcessInfo.h>
-#include <muduo/base/noncopyable.h>
+#include "src/log/LogFile.h"
+#include "src/log/Logging.h"
+
+#include "src/base/ProcessInfo.h"
 
 #include <assert.h>
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
 
-using namespace muduo;
+using namespace slack;
 
 // not thread safe
 class LogFile::File : noncopyable
@@ -38,11 +38,12 @@ public:
     {
         size_t n = write(logline, len);
         size_t remain = len - n;
+        // 没有写完
         while (remain > 0)
         {
             size_t x = write(logline + n, remain);
             // FIXME
-            if (x == 0) // EOF
+            if (x <= 0) // EOF
             {
                 int err = ferror(fp_);
                 if (err)
@@ -71,24 +72,27 @@ private:
     size_t write(const char *logline, size_t len)
     {
         #undef fwrite_unlocked
-        // 系统的无锁写，非线程安全，不管有没有锁，都会写
+        // 系统的无锁写，非线程安全，不管有没有锁，都会写，性能高
+        // stdio是线程安全
         // https://linux.die.net/man/3/flockfile
         return ::fwrite_unlocked(logline, 1, len, fp_);
     }
 
     FILE *fp_;
-    char buffer_[64 * 1024];
+    char buffer_[64 * 1024];    // 内部缓冲区
     size_t writtenBytes_;
 };
 
 
 LogFile::LogFile(const string &basename,
-                size_t rollSize,
+                off_t rollSize,
                 bool threadSafe,
-                int flushInterval)
+                int flushInterval,
+                int checkEveryN)
     : basename_(basename),
     rollSize_(rollSize),
     flushInterval_(flushInterval),
+    checkEveryN_(checkEveryN),
     count_(0),
     mutex_(threadSafe ? new MutexLock : nullptr),
     startOfPeriod_(0),
@@ -96,22 +100,23 @@ LogFile::LogFile(const string &basename,
     lastFlush_(0)
 {
     assert(basename_.find('/') == string::npos);
+    // 文件滚动
     rollFile();
 }
 
-LogFile::~LogFile()
-{
-}
+LogFile::~LogFile() = default;
 
 void LogFile::append(const char *logline, int len)
 {
     if (mutex_)
     {
         MutexLockGuard lock(*mutex_);
+        // 无锁追加，线程安全
         append_unlocked(logline, len);
     }
     else 
     {
+        // 非线程安全
         append_unlocked(logline, len);
     }
 }
@@ -140,32 +145,33 @@ void LogFile::append_unlocked(const char *logline, int len)
     }
     else 
     {
-        // 达到检查次数
-        if (count_ > kCheckTimeRoll_)
+        ++count_;
+        // 多久检查一次
+        if (count_ >= checkEveryN_)
         {
             count_ = 0;
             time_t now = ::time(nullptr);
+            // 每天零点新建日志
             time_t thisPeriod_ = now / kRollPerSeconds_ * kRollPerSeconds_;
             if (thisPeriod_ != startOfPeriod_)
             {
                 rollFile();
             }
+            // 达到刷新间隔
             else if (now - lastFlush_ > flushInterval_)
             {
                 lastFlush_ = now;
                 file_->flush();
             }
         }
-        else 
-        {
-            ++count_;
-        }
     }
 }
 
-void LogFile::rollFile()
+// 文件滚动
+bool LogFile::rollFile()
 {
     time_t now = 0;
+    // 获取文件名和now
     string filename = getLogFileName(basename_, &now);
     // 对齐至kRollPerSeconds_的整数倍，也就是时间调整到零点
     time_t start = now / kRollPerSeconds_ * kRollPerSeconds_;
@@ -176,9 +182,13 @@ void LogFile::rollFile()
         lastFlush_ = now;
         startOfPeriod_ = start;
         file_.reset(new File(filename));
+        return true;
     }
+
+    return false;
 }
 
+// 根据时间戳构造日志文件名
 string LogFile::getLogFileName(const string &basename, time_t *now)
 {
     string filename;
@@ -186,16 +196,20 @@ string LogFile::getLogFileName(const string &basename, time_t *now)
     filename = basename;
 
     char timebuf[32];
-    char pidbuf[32];
     struct tm tm;
     *now = time(nullptr);
     //gmtime_r(now, &tm);
     localtime_r(now, &tm);
+    // 格式化
     strftime(timebuf, sizeof timebuf, ".%Y%m%d-%H%M%S.", &tm);
     filename += timebuf;
-    filename += ProcessInfo::hostname();
+
+    filename += ProcessInfo::hostName();
+
+    char pidbuf[32];
     snprintf(pidbuf, sizeof pidbuf, ".%d", ProcessInfo::pid());
     filename += pidbuf;
+
     filename += ".log";
 
     return filename;

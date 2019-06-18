@@ -5,10 +5,11 @@
  * @Last Modified time: 2019-05-14 09:02:59
  */
 
-#include <muduo/base/Logging.h>
-#include <muduo/base/CurrentThread.h>
-#include <muduo/base/StringPiece.h>
-#include <muduo/base/Timestamp.h>
+#include "src/log/Logging.h"
+
+#include "src/base/CurrentThread.h"
+#include "src/base/StringPiece.h"
+#include "src/base/Timestamp.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -16,7 +17,7 @@
 
 #include <sstream>
 
-namespace muduo
+namespace slack
 {
 
 //线程局部数据
@@ -24,6 +25,7 @@ __thread char t_errnobuf[512];
 __thread char t_time[32];
 __thread time_t t_lastSecond;
 
+// 增加一个中间层，将errno保存在内部
 const char *strerror_tl(int savedErrno)
 {
     return strerror_r(savedErrno, t_errnobuf, sizeof t_errnobuf);
@@ -51,6 +53,7 @@ const char *LogLevelName[Logger::NUM_LOG_LEVELS] =
 class T
 {
 public:
+    // 构造函数中检查
     T(const char *str, unsigned len)
         : str_(str),
         len_(len)
@@ -63,6 +66,7 @@ public:
     const unsigned len_;
 };
 
+// operator<< 普通函数重载
 inline LogStream &operator<<(LogStream &s, T v)
 {
     s.append(v.str_, v.len_);
@@ -75,6 +79,7 @@ inline LogStream &operator<<(LogStream &s, const Logger::SourceFile &v)
     return s;
 }
 
+// stdout
 void defaultOutput(const char *msg, int len)
 {
     size_t n = fwrite(msg, 1, len, stdout);
@@ -89,10 +94,11 @@ void defalutFlush()
 Logger::OutputFunc g_output = defaultOutput;
 Logger::FlushFunc g_flush = defalutFlush;
 
-}   // namespace muduo
+}   // namespace slack
 
-using namespace muduo;
+using namespace slack;
 
+// Impl ctor
 Logger::Impl::Impl(LogLevel level, int saveErrno, const SourceFile &file, int line)
     : time_(Timestamp::now()),
     stream_(),
@@ -111,22 +117,26 @@ Logger::Impl::Impl(LogLevel level, int saveErrno, const SourceFile &file, int li
     }
 }
 
+// 格式化时间并输出到流
 void Logger::Impl::formatTime()
 {
     int64_t microSecondsSinceEpoch = time_.microSecondsSinceEpoch();
     time_t seconds = static_cast<time_t>(microSecondsSinceEpoch / time_.kMicroSecondsPerSecond);
     int microSeconds = static_cast<int>(microSecondsSinceEpoch % time_.kMicroSecondsPerSecond);
+    // 秒数变化, t_lastSecond做缓存
     if (seconds != t_lastSecond)
     {
         t_lastSecond = seconds;
         struct tm tm_time;
-        ::gmtime_r(&seconds, &tm_time);
+        // get formatted time
+        ::localtime_r(&seconds, &tm_time);
 
         int len = snprintf(t_time, sizeof t_time, "%4d%02d%02d %02d:%02d:%02d",
             tm_time.tm_year + 1900, tm_time.tm_mon + 1, tm_time.tm_mday,
             tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec);
         assert(len == 17); (void)len;
     }
+    // 左对齐
     Fmt us(".%06dZ ", microSeconds);
     assert(us.length() == 9);
     // output
@@ -164,6 +174,7 @@ Logger::Logger(SourceFile file, int line, bool toAbort)
 Logger::~Logger()
 {
     impl_.finish();
+    // 获取内部Buffer
     const LogStream::Buffer &buf(stream().buffer());
     g_output(buf.data(), buf.length());
     if (impl_.level_ == FATAL)

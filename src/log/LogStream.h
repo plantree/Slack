@@ -5,26 +5,24 @@
  * @Last Modified time: 2019-05-13 08:36:31
  */
 
-#ifndef MUDUO_BASE_LOGSTREAM_H
-#define MUDUO_BASE_LOGSTREAM_H
+#ifndef LOG_LOGSTREAM_H
+#define LOG_LOGSTREAM_H
 
-#include <muduo/base/noncopyable.h>
-#include <muduo/base/StringPiece.h>
-#include <muduo/base/Types.h>
+#include "src/base/noncopyable.h"
+#include "src/base/StringPiece.h"
+#include "src/base/Types.h"
+
 #include <assert.h>
 #include <string.h> // memcpy
-#ifndef MUDUO_STD_STRING
-#include <string>
-#endif
 
-namespace muduo
+namespace slack
 {
 
 namespace detail
 {
 
-const int kSmallBuffer = 4000;
-const int kLargeBuffer = 4000 * 1000;
+constexpr int kSmallBuffer = 4000;
+constexpr int kLargeBuffer = 4000 * 1000;
 
 template <int SIZE>
 class FixedBuffer : noncopyable
@@ -77,9 +75,10 @@ public:
     {
         cur_ = data_;
     }
+    // 初始化为0
     void bzero()
     {
-        ::bzero(data_, sizeof data_);
+        memZero(data_, sizeof data_);
     }
 
     // for used by GDB
@@ -89,9 +88,13 @@ public:
         cookie_ = cookie;
     }
     // for used by unit test
-    string asString() const
+    string toString() const
     {
         return string(data_, length());
+    }
+    StringPiece toStringPiece() const 
+    {
+        return StringPiece(data_, length());
     }
 
 private:
@@ -100,11 +103,15 @@ private:
         return data_ + sizeof data_;
     }
     // must be outline function for cookies
+    // 外部设置标识
     static void cookieStart();
     static void cookieEnd();
     
-    void (*cookie_)();  // 函数指针
+    // 函数指针
+    void (*cookie_)();  
+    // 内部缓冲区
     char data_[SIZE];
+    // 当前指针
     char *cur_;
 };
 
@@ -119,7 +126,7 @@ public:
     self &operator<<(bool v)
     {
         buffer_.append(v ? "1" : "0", 1);
-        return *this;   // 链式
+        return *this;  
     }
     self &operator<<(short);
     self &operator<<(unsigned short);
@@ -146,7 +153,14 @@ public:
     }
     self &operator<<(const char *v)
     {
-        buffer_.append(v, strlen(v));
+        if (v)
+        {
+            buffer_.append(v, strlen(v));
+        }
+        else 
+        {
+            buffer_.append("(null)", 6);
+        }
         return *this;
     }
     self &operator<<(const string &v)
@@ -155,17 +169,15 @@ public:
         return *this;
     }
 
-//#ifndef MUDUO_STD_STRING
-  //  self &operator<<(const std::string &v)
-    //{
-      //  buffer_.append(v.c_str(), v.size());
-        //return *this;
-    //}
-//#endif
-
     self &operator<<(const StringPiece &v)
     {
         buffer_.append(v.data(), v.size());
+        return *this;
+    }
+
+    self &operator<<(const Buffer &v)
+    {
+        *this << v.toStringPiece();
         return *this;
     }
 
@@ -182,6 +194,7 @@ public:
     }
 private:
     void staticCheck();
+
     template <typename T>
     void formatInteger(T);
 
@@ -189,7 +202,8 @@ private:
     static constexpr int kMaxNumericSize = 32;
 };
 
-// 辅助format
+// 辅助format类
+// 借助snprintf
 class Fmt : noncopyable
 {
 public:
@@ -215,6 +229,6 @@ inline LogStream &operator<<(LogStream &s, const Fmt &fmt)
     return s;
 }
 
-}   // namespace muduo
+}   // namespace slack
 
-#endif  // MUDUO_BASE_LOGSTREAM_H
+#endif  // LOG_LOGSTREAM_H

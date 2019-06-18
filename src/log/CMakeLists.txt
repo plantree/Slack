@@ -1,21 +1,12 @@
-set(BASE_SRCS 
-    Timestamp.cc
-    Exception.cc
-    CurrentThread.cc
-    Thread.cc
-    CountDownLatch.cc
-    Condition.cc
-    ThreadPool.cc
-    #LogStream.cc
-    #Logging.cc
-    #FileUtil.cc
-    #ProcessInfo.cc
-    #LogFile.cc
-    #AsyncLogging.cc
+set(LOG_SRCS 
+    LogStream.cc
+    Logging.cc
+    LogFile.cc
+    AsyncLogging.cc
     )
 
-add_library(slack_base ${BASE_SRCS})
-target_link_libraries(slack_base pthread)
+add_library(slack_log ${LOG_SRCS})
+target_link_libraries(slack_log pthread)
 
 #install(TARGETS slack_base DESTINATION lib)
 #file(GLOB HEADERS "*.h")

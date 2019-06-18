@@ -33,6 +33,6 @@ include_directories(${PROJECT_SOURCE_DIR})
 message(STATUS "Source_dir:" ${PROJECT_SOURCE_DIR})
 
 add_subdirectory(src/base)
-#add_subdirectory(src/log)
+add_subdirectory(src/log)
 #add_subdirectory(src/net)
 #add_subdirectory(tests)
