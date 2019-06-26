@@ -23,21 +23,6 @@
 - 按照`base`，`log`，`net`和`http`的顺序依次实现四个独立的库（`muduo`中只是按照`base`和`net`，示例放到`example`中）
 - 单元测试用例放在各自的库所在文件夹
 
-### Todo
-
-- [x] Timestamp
-- [x] Atomic
-- [x] Exception/CurrentThread
-- [x] Mutex/Condition/CountDownLatch
-- [ ] Thread
-- [ ] 
-
-### Blogs
-
-1. 
-
-
-
 ### Reference
 
 - [https://github.com/chenshuo/muduo](https://github.com/chenshuo/muduo)

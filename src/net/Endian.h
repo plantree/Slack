@@ -7,13 +7,13 @@
 /*****************************************
  * 转换字节序
  *****************************************/
-#ifndef MUDUO_NET_ENDIAN_H
-#define MUDUO_NET_ENDIAN_H
+#ifndef NET_ENDIAN_H
+#define NET_ENDIAN_H
 
 #include <stdint.h>
 #include <endian.h>
 
-namespace muduo
+namespace slack
 {
 
 namespace net
@@ -30,6 +30,7 @@ namespace sockets
 #pragma GCC diagnostic ignored "-Wconversion"
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
+// 本地字节序到网络字节序，非标准
 inline uint64_t hostToNetwork64(uint64_t host64)
 {
     return htobe64(host64);
@@ -45,6 +46,7 @@ inline uint16_t hostToNetwork16(uint16_t host16)
     return htobe16(host16);
 }
 
+// 网络字节序到本地字节序
 inline uint64_t networkToHost64(uint64_t net64)
 {
     return be64toh(net64);
@@ -71,7 +73,6 @@ inline uint16_t networkToHost16(uint16_t net16)
 
 }   // namespace net
 
-}   // namespace muduo
+}   // namespace slack
 
-
-#endif  // MUDUO_NET_ENDIAN_H
+#endif  // NET_ENDIAN_H

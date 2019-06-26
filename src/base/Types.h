@@ -4,7 +4,7 @@
  * @Last Modified by: py.wang
  * @Last Modified time: 2019-05-15 08:46:42
  */
-//#pragma once    // 头文件只被编译一次
+#pragma once    // 头文件只被编译一次
 #ifndef BASE_TYPES_H
 #define BASE_TYPES_H
 

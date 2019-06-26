@@ -1,4 +1,7 @@
 set(NET_SRCS
+    InetAddress.cc
+    SocketsOps.cc
+    Socket.cc
     Buffer.cc
     #Channel.cc
     #EventLoop.cc
@@ -9,9 +12,6 @@ set(NET_SRCS
     #Timer.cc
     #TimerQueue.cc
     #EventLoopThread.cc
-    #InetAddress.cc
-    #SocketsOps.cc
-    #Socket.cc
     #Acceptor.cc
     #TcpConnection.cc
     #TcpServer.cc
@@ -20,9 +20,8 @@ set(NET_SRCS
     #TcpClient.cc
     )
 
-
 add_library(slack_net ${NET_SRCS})
-target_link_libraries(slack_net slack_base slack_log)
+target_link_libraries(slack_net slack_log slack_base)
 
 add_subdirectory(tests)
 #add_subdirectory(http)
