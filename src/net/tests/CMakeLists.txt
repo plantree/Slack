@@ -4,14 +4,14 @@ target_link_libraries(inetaddress_unittest slack_net)
 add_executable(buffer_unittest Buffer_unittest.cc)
 target_link_libraries(buffer_unittest slack_net)
 
-#add_executable(timerqueue_unittest TimerQueue_unittest.cc)
-#target_link_libraries(timerqueue_unittest muduo_net)
+add_executable(channel_unittest Channel_unittest.cc)
+target_link_libraries(channel_unittest slack_net)
 
-#add_executable(channel_unittest Channel_unittest.cc)
-#target_link_libraries(channel_unittest muduo_net)
+add_executable(timerqueue_unittest TimerQueue_unittest.cc)
+target_link_libraries(timerqueue_unittest slack_net)
 
-#add_executable(eventloop_unittest EventLoop_unittest.cc)
-#target_link_libraries(eventloop_unittest muduo_net)
+add_executable(eventloop_unittest EventLoop_unittest.cc)
+target_link_libraries(eventloop_unittest slack_net)
 
 #add_executable(eventloopthread_unittest EventLoopThread_unittest.cc)
 #target_link_libraries(eventloopthread_unittest muduo_net)
