@@ -80,7 +80,6 @@ EventLoop::EventLoop()
     wakeupChannel_(new Channel(this, wakeupFd_)),
     currentActiveChannel_(nullptr)
 {
-    LOG_TRACE << "EventLoop created " << this << " in thread " << threadId_;
     // 如果当前线程已经创建了EventLoop对象，终止（LOG_FATAL）
     if (t_loopInThisThread)
     {
@@ -94,6 +93,8 @@ EventLoop::EventLoop()
     wakeupChannel_->setReadCallback(std::bind(&EventLoop::handleRead, this));
     // we always reading the wakeupfd
     wakeupChannel_->enableReading();
+    
+    LOG_TRACE << "EventLoop created " << this << " in thread " << threadId_;
 }
 
 EventLoop::~EventLoop()

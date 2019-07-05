@@ -11,11 +11,11 @@ set(NET_SRCS
     poller/EpollPoller.cc
     Timer.cc
     TimerQueue.cc
-    #EventLoopThread.cc
+    EventLoopThread.cc
+    EventLoopThreadPool.cc
     #Acceptor.cc
     #TcpConnection.cc
     #TcpServer.cc
-    #EventLoopThreadPool.cc
     #Connector.cc
     #TcpClient.cc
     )
