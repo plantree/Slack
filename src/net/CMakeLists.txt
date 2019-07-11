@@ -13,11 +13,11 @@ set(NET_SRCS
     TimerQueue.cc
     EventLoopThread.cc
     EventLoopThreadPool.cc
-    #Acceptor.cc
-    #TcpConnection.cc
-    #TcpServer.cc
-    #Connector.cc
-    #TcpClient.cc
+    Acceptor.cc
+    TcpConnection.cc
+    TcpServer.cc
+    Connector.cc
+    TcpClient.cc
     )
 
 add_library(slack_net ${NET_SRCS})

@@ -19,12 +19,11 @@ target_link_libraries(eventloopthread_unittest slack_net)
 add_executable(eventloopthreadpool_unittest EventLoopThreadPool_unittest.cc)
 target_link_libraries(eventloopthreadpool_unittest slack_net) 
 
+add_executable(echoserver_unittest EchoServer_unittest.cc)
+target_link_libraries(echoserver_unittest slack_net)
 
-#add_executable(echoserver_unittest EchoServer_unittest.cc)
-#target_link_libraries(echoserver_unittest muduo_net)
-
-#add_executable(echoclient_unittest EchoClient_unittest.cc)
-#target_link_libraries(echoclient_unittest muduo_net)
+add_executable(echoclient_unittest EchoClient_unittest.cc)
+target_link_libraries(echoclient_unittest slack_net)
 
 #add_executable(tcpclient_unittest TcpClient_unittest.cc)
 #target_link_libraries(tcpclient_unittest muduo_net)
