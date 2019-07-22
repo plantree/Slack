@@ -15,7 +15,7 @@
 ### Environment
 
 - OS: Ubuntu 18.04 (64 bit)
-- Compiler: gcc 7.3.0 (Ubuntu 7.3.0-27ubuntu1~18.04) 
+- Compiler: GCC 7.3.0 (Ubuntu 7.3.0-27ubuntu1~18.04) 
 - Build: CMake 3.10.2
 
 ### Design
@@ -23,7 +23,14 @@
 - 按照`base`，`log`，`net`和`http`的顺序依次实现四个独立的库（`muduo`中只是按照`base`和`net`，示例放到`example`中）
 - 单元测试用例放在各自的库所在文件夹
 
+### Statistics
+
+
+
 ### Reference
 
 - [https://github.com/chenshuo/muduo](https://github.com/chenshuo/muduo)
-- 
+- 《Linux多线程服务端编程》
+- 《Unix网络编程》
+- 《Unix环境高级编程》
+- 《Linux系统编程手册》

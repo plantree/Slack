@@ -1,0 +1,2 @@
+add_executable(httpserver_test HttpServer_test.cc)
+target_link_libraries(httpserver_test slack_http)

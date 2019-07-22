@@ -24,7 +24,7 @@ add_library(slack_net ${NET_SRCS})
 target_link_libraries(slack_net slack_log slack_base)
 
 add_subdirectory(tests)
-#add_subdirectory(http)
+add_subdirectory(http)
 
 #install(TARGETS muduo_net DESTINATION lib)
 #set(HEADERS

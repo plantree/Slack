@@ -2,7 +2,7 @@
  * @Author: py.wang 
  * @Date: 2019-05-27 09:25:10 
  * @Last Modified by: py.wang
- * @Last Modified time: 2019-07-07 10:36:25
+ * @Last Modified time: 2019-07-22 07:48:13
  */
 
 #ifndef NET_TCPCONNECTION_H
@@ -15,6 +15,7 @@
 #include "src/net/Callbacks.h"
 #include "src/net/InetAddress.h"
 #include "src/net/Buffer.h"
+#include "src/net/any.h"
 
 #include <functional>
 #include <memory>
@@ -98,7 +99,20 @@ public:
         return reading_;
     }
 
-    // FIXME: any context
+    void setContext(const any &context)
+    {
+        context_ = context;
+    }
+
+    const any &getContext() const 
+    {
+        return context_;
+    }
+
+    any *getMutableContext()
+    {
+        return &context_;
+    }
 
     // 回调函数：连接、读事件、写完成事件、高水位事件
     void setConnectionCallback(const ConnectionCallback &cb)
@@ -188,6 +202,8 @@ private:
     size_t highWaterMark_;
     Buffer inputBuffer_;
     Buffer outputBuffer_;
+
+    any context_;
 };
 
 using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
