@@ -2,7 +2,7 @@
  * @Author: py.wang 
  * @Date: 2019-07-22 08:03:08 
  * @Last Modified by: py.wang
- * @Last Modified time: 2019-07-22 08:42:27
+ * @Last Modified time: 2019-07-23 20:14:36
  */
 #include "src/net/http/HttpServer.h"
 #include "src/net/http/HttpRequest.h"
@@ -11,6 +11,7 @@
 #include "src/log/Logging.h"
 
 #include <iostream>
+#include <fstream>
 #include <map>
 
 using namespace slack;
@@ -34,6 +35,12 @@ void onReqeust(const HttpRequest &req, HttpResponse *resp)
         string now = Timestamp::now().toFormattedString();
         resp->setBody("<html><head><title>This is just a test!</title></head>"
             "<body><h1>Hello</h1> Now is " + now + "</body></html>");
+
+        // for ab test
+        // std::ifstream file("index.html");
+        // string contents((std::istreambuf_iterator<char>(file)),
+        //             std::istreambuf_iterator<char>());
+        // resp->setBody(contents);
     }
     else if (req.path() == "/hello")
     {
