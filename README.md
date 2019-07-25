@@ -31,7 +31,7 @@
 - 定时器事件借助`timerfd`，线程唤醒事件通知借助`eventfd`，以及监听和连接套接字，统一纳入到IO多路复用体系中
 - 基于红黑二叉搜索树的定时器队列
 - 基于双缓冲的异步日志
-- Reactor设计模式，主Reactor通过accept连接，按照Round Robing的方式依次派发给线程池中的次Reactor
+- Reactor设计模式，主Reactor通过accept连接，按照Round Robin的方式依次派发给线程池中的次Reactor
 
 ### Statistics
 
@@ -47,7 +47,7 @@
 
    并发数100，测试100次，Keep-alive（长连接）
 
-   作为对比，使用了Nodejs的Express框架，访问的都是https://github.com/plantree/Slack的html内容
+   作为对比，使用了Nodejs的Express框架，访问的都是[https://github.com/plantree/Slack](https://github.com/plantree/Slack)的html内容
 
    Nodejs：
 
