@@ -31,7 +31,7 @@
 - 定时器事件借助`timerfd`，线程唤醒事件通知借助`eventfd`，以及监听和连接套接字，统一纳入到IO多路复用体系中
 - 基于红黑二叉搜索树的定时器队列
 - 基于双缓冲的异步日志
-- Reactor设计模式，主Reactor通过accept连接，按照Round Robin的方式依次派发给线程池中的次Reactor
+- Reactor设计模式，主Reactor通过accept接受连接，按照Round Robin的方式依次派发给线程池中的次Reactor
 
 ### Statistics
 
@@ -53,16 +53,21 @@
 
    ![](https://raw.githubusercontent.com/plantree/PictureBed/master/images/20190723200155.png)
 
-   Slack（线程100）：
+   Slack（线程1）：
 
-   ![](https://raw.githubusercontent.com/plantree/PictureBed/master/images/20190723201213.png)
+   ![](https://raw.githubusercontent.com/plantree/PictureBed/master/images/20190806145246.png)
 
-   简单测试，看起来效果还不错！
+   Slack（线程10）：
+
+   ![](https://raw.githubusercontent.com/plantree/PictureBed/master/images/20190806144954.png)
+
+   测试是一项复杂而细致的工作，这里只是简单测试，略作比较，后面会再去研究。
 
 ### Plan
 
 - 继续研究muduo源码，熟悉各种网络编程的例子
 - 丰富HTTP服务器，实现为REST风格接口
+- 学习Java，了解Netty
 
 ### Reference
 
